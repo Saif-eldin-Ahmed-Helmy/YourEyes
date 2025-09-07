@@ -15,7 +15,7 @@ YourEyes is a comprehensive mobile application developed in Unity, designed to a
 
 YourEyes offers a suite of powerful tools accessible through a simple tap-based interface:
 
-*   **Distance Measurement**: Calculates and announces the distance to objects in front of the user.
+*   **Distance Measurement**: Calculates and announces the distance to objects in front of the user. This feature is powered by a custom-built remote device using an **ESP32       microcontroller** paired with an **ultrasonic sensor**, which sends distance data to the mobile app in real time.
 *   **Money Recognition**: Identifies and sums Egyptian Pound banknotes, detailing the count of each denomination.
 *   **Clothes Analysis**: Describes the type and color of clothing items in view.
 *   **Sign Language Interpretation**: Recognizes and translates basic hand gestures into spoken Arabic.
