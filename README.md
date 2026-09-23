@@ -9,6 +9,10 @@
 
 # YourEyes
 
+> **Source status:** This repository is a partial Unity source export, not a ready-to-import Unity project. It does not include `ProjectSettings/`, `Packages/manifest.json`, or every model referenced by the scripts. Running it requires the original Unity project, licensed OpenCV for Unity assets, and model files whose redistribution rights must be checked. The screenshots below document prototype work; they are not evidence of measured accuracy or a production deployment.
+
+**Credential note:** Older commits contained Google API keys. Those credentials have been revoked. Current source reads `GOOGLE_GEMINI_API_KEY` from the process environment for the two direct Gemini prototype paths. A key placed in a mobile build can be extracted by users; use a controlled backend before distributing an app. Do not commit a replacement key or include one in Unity scene/config assets.
+
 YourEyes is a comprehensive mobile application developed in Unity, designed to assist visually impaired individuals by leveraging the power of computer vision and artificial intelligence. The application uses the device's camera to perceive the user's surroundings and provides real-time audio feedback in Arabic.
 
 ## Features

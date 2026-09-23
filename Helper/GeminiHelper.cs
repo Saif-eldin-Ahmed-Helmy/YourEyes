@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
@@ -40,7 +40,7 @@ public class GeminiHelper : MonoBehaviour
         }
     }
 
-    private const string API_KEY = "***REMOVED***";
+    private static string ApiKey => Environment.GetEnvironmentVariable("GOOGLE_GEMINI_API_KEY");
     private const string BASE_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
 
     // Clothing analysis specific prompt
@@ -78,7 +78,13 @@ you can analyze the image, thank you <3 if you don't know just guess don't give 
 
     public IEnumerator SendClothingAnalysisRequest(byte[] imageBytes, Action<ClothingResponseData> callback)
     {
-        string apiUrl = BASE_API_URL + API_KEY;
+        string apiKey = ApiKey;
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            callback(new ClothingResponseData { error = "Gemini key is not configured" });
+            yield break;
+        }
+        string apiUrl = BASE_API_URL + apiKey;
 
         var jsonData = new
         {

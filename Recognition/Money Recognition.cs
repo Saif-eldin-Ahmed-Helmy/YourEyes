@@ -203,7 +203,13 @@ namespace RealTimeFaceRecognitionExample
             moneyInfo.text = "Processing...";
             billsInfo.text = "";
             // Define the API endpoint and your API key
-            string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=***REMOVED***";
+            string apiKey = System.Environment.GetEnvironmentVariable("GOOGLE_GEMINI_API_KEY");
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                moneyInfo.text = "Gemini key is not configured";
+                yield break;
+            }
+            string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
 
             // Create JSON payload with both the text prompt and encoded image
             var jsonData = new

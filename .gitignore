@@ -3,6 +3,15 @@
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
 .utmp/
+.devagent/
+.agents/
+.codex/
+.gemini/
+.config/
+.env
+.env.*
+.idea/
+.vscode/
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
