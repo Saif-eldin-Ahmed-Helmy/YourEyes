@@ -9,6 +9,10 @@
 
 # YourEyes
 
+> **Setup:** Use the scripts with the matching Unity project, licensed OpenCV for Unity package, and referenced model files.
+
+**Configuration:** Image analysis requests use the companion API at `http://127.0.0.1:5000/gemini/generate`; the endpoint is configurable in the component.
+
 YourEyes is a comprehensive mobile application developed in Unity, designed to assist visually impaired individuals by leveraging the power of computer vision and artificial intelligence. The application uses the device's camera to perceive the user's surroundings and provides real-time audio feedback in Arabic.
 
 ## Features
