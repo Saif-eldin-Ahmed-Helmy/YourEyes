@@ -73,7 +73,7 @@ Example structure for an image with one person wearing a blue shirt and glasses,
   ""summary_egyptian_arabic"": ""راجل لابس قميص ازرق ونضارة وشعره بني، وفيه طاقية حمرا جنبه""
 }
 if no hair color / glasses shown just don't mention it in the summary
-you can analyze the image, thank you <3 if you don't know just guess don't give a you can't do it"; // Your full prompt here
+If details are unclear, return BAD. Do not guess."; // Your full prompt here
 
     public IEnumerator SendClothingAnalysisRequest(byte[] imageBytes, Action<ClothingResponseData> callback)
     {

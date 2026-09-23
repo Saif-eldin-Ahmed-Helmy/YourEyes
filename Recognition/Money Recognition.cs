@@ -216,7 +216,7 @@ namespace RealTimeFaceRecognitionExample
             {
                 parts = new object[]
                 {
-                    new { text = "This photo has Egyptian money. I want to know how much money is in the photo. Can you answer me in this format no matter what happens?: Are You Sure: Yes/No (Yes if picture is good, No if you'd prefer a better picture), Is There Money: Yes/No (Yes if there's money in the pictue, No if the picture doesn't have any money), Money Notes & Coins: [1, 1, 10, 10, 200, etc.] (Empty if there's no money), Money Total: 220 (0 if there's no money)." },
+                    new { text = "This photo has Egyptian money. I want to know how much money is in the photo. Return exactly four lines, one field per line: Are You Sure: Yes/No (Yes if picture is good, No if you'd prefer a better picture), Is There Money: Yes/No (Yes if there's money in the pictue, No if the picture doesn't have any money), Money Notes & Coins: [1, 1, 10, 10, 200, etc.] (Empty if there's no money), Money Total: 220 (0 if there's no money)." },
                     new
                     {
                         inline_data = new
@@ -251,49 +251,27 @@ namespace RealTimeFaceRecognitionExample
             {
                 var responseText = request.downloadHandler.text;
 
-                // Find the start of the relevant text
-                int startIndex = responseText.IndexOf("\"text\": \"");
-                if (startIndex == -1)
-                {
-                    Debug.LogError("Failed to find 'Are You Sure:' in the response.");
-                    moneyInfo.text = "Error: Short Response";
-                    yield break;
-                }
                 try
                 {
-                    // Extract the relevant part of the string containing the formatted data
-                    int textStart = responseText.IndexOf(": \"") + 3;  // Skip past the colon and space
-                    int textEnd = responseText.IndexOf("\"", textStart);
-                    string relevantText = responseText.Substring(textStart, textEnd - textStart);
-
-                    // Now parse the extracted text, splitting it into lines
-                    string[] lines = relevantText.Split("\\n");
-
-                    // Extract values from each line by splitting at the colon
-                    string areYouSure = lines[0].Split(':')[1].Trim();
-                    string isThereMoney = lines[1].Split(':')[1].Trim();
-                    string moneyNotesAndCoins = lines[2].Split(':')[1].Trim();
-                    string moneyTotal = lines[3].Split(':')[1].Trim();
-
-                    // Display or use the extracted information
-                    Debug.Log($"Are You Sure: {areYouSure}");
-                    Debug.Log($"Is There Money: {isThereMoney}");
-                    Debug.Log($"Money Notes & Coins: {moneyNotesAndCoins}");
-                    Debug.Log($"Money Total: {moneyTotal}");
-
-                    // Example: Assigning values to UI text elements
-                    moneyInfo.text = $"Are You Sure: {areYouSure}\nIs There Money: {isThereMoney}";
-                    billsInfo.text = $"Notes & Coins: {moneyNotesAndCoins}\nTotal: {moneyTotal}";
+                    var response = Newtonsoft.Json.Linq.JObject.Parse(responseText);
+                    string text = response["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
+                    if (string.IsNullOrWhiteSpace(text)) throw new FormatException("Empty analysis result");
+                    string[] lines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (lines.Length < 4) throw new FormatException("Incomplete analysis result");
+                    string[] values = new string[4];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        int separator = lines[i].IndexOf(':');
+                        if (separator < 0) throw new FormatException("Invalid analysis field");
+                        values[i] = lines[i].Substring(separator + 1).Trim();
+                    }
+                    moneyInfo.text = $"Are You Sure: {values[0]}\nIs There Money: {values[1]}";
+                    billsInfo.text = $"Notes & Coins: {values[2]}\nTotal: {values[3]}";
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    int textStart = responseText.IndexOf(": \"") + 3;  // Skip past the colon and space
-                    int textEnd = responseText.IndexOf("\"", textStart);
-                    string relevantText = responseText.Substring(textStart, textEnd - textStart);
-                    Debug.LogError("Failed to parse response: " + e.Message);
-                    moneyInfo.text = relevantText;
-                    // Extract the relevant part of the string containing the formatted data
-                    billsInfo.text = e.ToString();
+                    moneyInfo.text = "Unable to read the analysis result. Please try again.";
+                    billsInfo.text = "";
                 }
             }
             else
